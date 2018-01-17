@@ -84,28 +84,32 @@ export default class Worker {
    */
   async executeJob(job) {
 
-    // If no worker assigned to job name, throw error.
-    if (!Worker.workers[job.name]) {
-      throw new Error('Job ' + job.name + ' does not have a worker assigned to it.');
+    try {
+          // If no worker assigned to job name, throw error.
+        if (!Worker.workers[job.name]) {
+          throw new Error('Job ' + job.name + ' does not have a worker assigned to it.');
+        }
+
+        // // Timeout Logic
+        // if (job.timeout > 0) {
+
+        //   let timeoutPromise = new Promise((resolve, reject) => {
+
+        //     setTimeout(() => {
+        //       reject(new Error('TIMEOUT: Job id: ' + job.id + ' timed out in ' + job.timeout  + 'ms.'));
+        //     }, job.timeout);
+
+        //   });
+
+        //   await Promise.race([timeoutPromise, Worker.workers[job.name](job.id, JSON.parse(job.payload))]);
+
+        // } else {
+          await Worker.workers[job.name](job.id, JSON.parse(job.payload));
+        // }
+    } catch (error) {
+      
     }
-
-    // Timeout Logic
-    if (job.timeout > 0) {
-
-      let timeoutPromise = new Promise((resolve, reject) => {
-
-        setTimeout(() => {
-          reject(new Error('TIMEOUT: Job id: ' + job.id + ' timed out in ' + job.timeout  + 'ms.'));
-        }, job.timeout);
-
-      });
-
-      await Promise.race([timeoutPromise, Worker.workers[job.name](job.id, JSON.parse(job.payload))]);
-
-    } else {
-      await Worker.workers[job.name](job.id, JSON.parse(job.payload));
-    }
-
+    
   }
 
 }

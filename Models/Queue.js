@@ -24,6 +24,7 @@ export class Queue {
     this.realm = null;
     this.worker = new Worker();
     this.status = 'inactive';
+    this.isConnected = false;
   }
 
   /**
@@ -146,6 +147,9 @@ export class Queue {
     if (this.status == 'active') {
       return false;
     }
+    if (!this.isConnected) {
+      return;
+    }
 
     this.status = 'active';
 
@@ -163,7 +167,9 @@ export class Queue {
     }
 
     while (this.status == 'active' && concurrentJobs.length) {
-
+      if (!this.isConnected) {
+        break;
+      }
       // Loop over jobs and process them concurrently.
       const processingJobs = concurrentJobs.map( job => {
         return this.processJob(job);

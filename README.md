@@ -1,5 +1,9 @@
 <img src="/docs/logo.png" alt="React Native Queue"/>
 
+#### changes in this version for my project - use on your own risk
+1. add isConnected to Queue to stop the queue when there is no Internet.
+2. comment out the timer due to issue : Accessing object of type Job which has been invalidated or deleted. https://github.com/realm/realm-js/issues/1031
+
 # React Native Queue
 #### Simple. Powerful. Persistent.
 
